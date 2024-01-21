@@ -25,10 +25,10 @@ fun Home(navController: NavController, mainViewModel: MainViewModel){
     Column(
 //        verticalArrangement = Arrangement.Center,
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top =200.dp)
-        
+
     ){
         Text(text = username)
         Image(imageVector = Icons.Default.AccountBox,

@@ -5,36 +5,33 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.androidappproject.ui.theme.AndroidAppProjectTheme
-import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -50,12 +47,30 @@ data class NavigationItem(
 class MainActivity : ComponentActivity() {
 
     private val mainViewModel: MainViewModel by viewModels<MainViewModel>()
+    private val db by lazy {
+        Room.databaseBuilder(
+            applicationContext,
+            TripDatabase::class.java,
+            "trips.db"
+        ).build()
+    }
+
+    private val dbViewModel by viewModels<TripViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return TripViewModel(db.dao) as T
+                }
+            }
+        }
+    )
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AndroidAppProjectTheme {
+                val state by dbViewModel.state.collectAsState()
                 val navController = rememberNavController()
                 val items = listOf<NavigationItem>(
                     NavigationItem(
@@ -137,8 +152,8 @@ class MainActivity : ComponentActivity() {
                     {
                         NavHost(navController = navController, startDestination = "home") {
                             composable(Screen.Home.route) { Home(navController, mainViewModel) }
-                            composable(Screen.TravelList.route) { TravelList(navController) }
-                            composable(Screen.Settings.route) { Settings(navController) }
+                            composable(Screen.TravelList.route) { TravelList(navController,state = state, onEvent= dbViewModel::onEvent) }
+                            composable(Screen.Settings.route) { Settings(navController, mainViewModel) }
                         }
                     }
                 }

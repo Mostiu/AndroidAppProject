@@ -11,11 +11,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
@@ -33,7 +36,7 @@ enum class TabPage(val icon: ImageVector){
 }
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Settings(navController: NavController){
+fun Settings(navController: NavController, mainViewModel: MainViewModel){
 
     var tabIndex by remember { mutableStateOf(0) }
 
@@ -41,8 +44,8 @@ fun Settings(navController: NavController){
     Column(
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
         modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 60.dp)
+            .fillMaxWidth()
+            .padding(top = 60.dp)
     ) {
         TabRow(selectedTabIndex = tabIndex) {
             tabs.forEachIndexed { index, title ->
@@ -59,15 +62,41 @@ fun Settings(navController: NavController){
             }
         }
         when (tabIndex) {
-            0 -> FirstPage()
+            0 -> FirstPage(mainViewModel)
             1 -> SecondPage()
         }
     }
 }
 
 @Composable
-fun FirstPage() {
-    Text(text = "Home")
+fun FirstPage(mainViewModel: MainViewModel) {
+    var username by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    Surface(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+        ) {
+            Text(text = "Ustaw Username")
+            Spacer(modifier = Modifier.padding(10.dp))
+            TextField(value = username, onValueChange = {
+                username = it
+            })
+            Spacer(modifier = Modifier.padding(10.dp))
+            Text(text = "Ustaw Description")
+            Spacer(modifier = Modifier.padding(10.dp))
+            TextField(value = description, onValueChange = {
+                description = it
+              })
+            Spacer(modifier = Modifier.padding(10.dp))
+            Button(onClick = {
+                mainViewModel.updateUsername(username)
+                mainViewModel.updateDescription(description)
+            }) {
+                Text(text = "Zapisz")
+            }
+        }
+    }
 }
 
 
