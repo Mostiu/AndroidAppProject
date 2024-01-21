@@ -1,7 +1,13 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt") version "1.9.0"
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+
 }
+
+
 
 android {
     namespace = "com.example.androidappproject"
@@ -69,4 +75,9 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("com.google.accompanist:accompanist-pager:0.20.0")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
 }
+
