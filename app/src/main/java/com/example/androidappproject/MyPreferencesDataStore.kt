@@ -1,6 +1,7 @@
 package com.example.androidappproject
 
 import android.content.Context
+import android.media.Image
 
 
 import androidx.datastore.core.DataStore
@@ -21,6 +22,7 @@ val Context.myPreferencesDataStore: DataStore<Preferences> by preferencesDataSto
 data class UserPreferences(
     val username: String,
     val description: String,
+    val profilePicture: String
     )
 
 
@@ -33,6 +35,7 @@ class MyPreferencesDataStore @Inject constructor(
     private object PreferencesKeys {
         val USERNAME = stringPreferencesKey("username")
         val DESCRIPTION = stringPreferencesKey("description")
+        val PROFILE_PICTURE = stringPreferencesKey("profilePicture")
 
     }
 
@@ -46,7 +49,8 @@ class MyPreferencesDataStore @Inject constructor(
         }.map { preferences ->
             val username = preferences[PreferencesKeys.USERNAME] ?: "Username"
             val description = preferences[PreferencesKeys.DESCRIPTION] ?: "Description"
-            UserPreferences(username, description)
+            val profilePicture = preferences[PreferencesKeys.PROFILE_PICTURE] ?: "1"
+            UserPreferences(username, description, profilePicture)
         }
 
     suspend fun updateUsername(username: String) {
@@ -58,6 +62,12 @@ class MyPreferencesDataStore @Inject constructor(
     suspend fun updateDescription(description: String) {
         myPreferencesDataStore.edit { preferences ->
             preferences[PreferencesKeys.DESCRIPTION] = description
+        }
+    }
+
+    suspend fun updateProfilePicture(profilePicture: String) {
+        myPreferencesDataStore.edit { preferences ->
+            preferences[PreferencesKeys.PROFILE_PICTURE] = profilePicture
         }
     }
 }

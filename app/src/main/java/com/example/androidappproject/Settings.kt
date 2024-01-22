@@ -1,7 +1,9 @@
 package com.example.androidappproject
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,8 +28,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 
 
 enum class TabPage(val icon: ImageVector){
@@ -63,7 +70,7 @@ fun Settings(navController: NavController, mainViewModel: MainViewModel){
         }
         when (tabIndex) {
             0 -> FirstPage(mainViewModel)
-            1 -> SecondPage()
+            1 -> SecondPage(mainViewModel)
         }
     }
 }
@@ -100,8 +107,37 @@ fun FirstPage(mainViewModel: MainViewModel) {
 }
 
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun SecondPage() {
-    Text(text = "About")
+fun SecondPage(mainViewModel: MainViewModel) {
+
+    val photos = listOf(
+        R.drawable.p1,
+        R.drawable.p2,
+        R.drawable.p3,
+        R.drawable.p4,
+        R.drawable.p5,
+    )
+    val pagerState = rememberPagerState()
+    Box(modifier = Modifier.fillMaxSize()){
+        HorizontalPager(
+            count = photos.size,
+            state = pagerState,
+            key = { photos[it] }
+        ) { page ->
+            Image(
+                painter = painterResource(id = photos[page]),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+                )
+
+        }
+        Button(onClick = {
+            mainViewModel.updateProfilePicture(pagerState.currentPage.toString())
+        }) {
+            Text(text = "Zapisz")
+        }
+    }
 }
 

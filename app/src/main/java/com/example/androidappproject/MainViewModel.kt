@@ -19,6 +19,10 @@ class MainViewModel @Inject constructor(
         it.description
     }
 
+    val profilePicture = myPreferencesDataStore.userFlow.map{
+        it.profilePicture
+    }
+
     fun updateUsername(username: String) {
         viewModelScope.launch {
             myPreferencesDataStore.updateUsername(username)
@@ -28,6 +32,12 @@ class MainViewModel @Inject constructor(
     fun updateDescription(description: String) {
         viewModelScope.launch {
             myPreferencesDataStore.updateDescription(description)
+        }
+    }
+
+    fun updateProfilePicture(profilePicture: String) {
+        viewModelScope.launch {
+            myPreferencesDataStore.updateProfilePicture(profilePicture)
         }
     }
 }

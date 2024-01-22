@@ -26,6 +26,8 @@ import kotlinx.coroutines.launch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
@@ -100,7 +102,9 @@ class MainActivity : ComponentActivity() {
                 ModalNavigationDrawer(
                     drawerContent = {
                         ModalDrawerSheet {
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Text("Trip Journal \nTomasz Koralewski", fontSize = 20.sp, modifier = Modifier.padding(top=20.dp).align(
+                                Alignment.CenterHorizontally))
+                            Spacer(modifier = Modifier.height(50.dp))
                             items.forEachIndexed { index, item ->
                                 NavigationDrawerItem(
                                     label = { Text(item.title) },
@@ -131,7 +135,7 @@ class MainActivity : ComponentActivity() {
                                 ),
                                 title = {
                                     Text(
-                                        "Centered Top App Bar",
+                                        "Trip Journal",
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
