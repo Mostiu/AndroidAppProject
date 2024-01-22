@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -47,7 +49,7 @@ fun Settings(navController: NavController, mainViewModel: MainViewModel){
 
     var tabIndex by remember { mutableStateOf(0) }
 
-    val tabs = listOf("Home", "About")
+    val tabs = listOf("Dane", "Zdjecie")
     Column(
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
         modifier = Modifier
@@ -61,8 +63,8 @@ fun Settings(navController: NavController, mainViewModel: MainViewModel){
                     onClick = { tabIndex = index },
                     icon = {
                         when (index) {
-                            0 -> Icon(imageVector = Icons.Default.Home, contentDescription = null)
-                            1 -> Icon(imageVector = Icons.Default.Info, contentDescription = null)
+                            0 -> Icon(imageVector = Icons.Default.Info, contentDescription = null)
+                            1 -> Icon(imageVector = Icons.Default.Star, contentDescription = null)
                         }
                     }
                 )
